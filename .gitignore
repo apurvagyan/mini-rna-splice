@@ -1,0 +1,13 @@
+.venv
+*.pkl
+*.pk
+*.fa
+*.err
+*.out
+*.swp
+*.txt
+*.pt
+*.json
+__pycache__/*
+.pyc
+
