@@ -6,6 +6,7 @@
 *.out
 *.swp
 *.txt
+*.tsv
 *.pt
 *.json
 __pycache__/*
