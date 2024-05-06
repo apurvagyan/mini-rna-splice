@@ -28,15 +28,17 @@ class Autoencoder(nn.Module):
 
 
 if __name__ == '__main__':
-    input_dim = 10
+    # Define the input and latent dimensions
+    
+    input_dim = 55
     latent_dim = 3
     model = Autoencoder(input_dim, latent_dim)
-    print(model)
+    # print(model)
     # Load the scatter coefficients
-    scatter_coeffs = torch.load('scatter_coeffs.pt')
+    scatter_coeffs = torch.load('scatter_coeffs_200.pt')
     import pdb; pdb.set_trace()
     # Pass the scatter coefficients through the model
     encoded, decoded = model(scatter_coeffs)
 
     # Save the latent space representation
-    torch.save(encoded, 'latent_space.pt')
+    torch.save(encoded, 'latent_space_20.pt')

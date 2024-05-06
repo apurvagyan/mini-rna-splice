@@ -4,12 +4,7 @@ from scatter import Scatter
 from scipy.sparse import coo_matrix
 import torch
 from torch_geometric.data import Data
-
-with open('out_success/output_gpu_adjacency.pkl', 'rb') as f:
-    data = pk.load(f)
-    data_2 = pk.load(f)
-
-print(data)
+from tqdm import tqdm
 
 def adj_list_to_adj_matrix(adj_list):
     """
@@ -29,8 +24,6 @@ def adj_list_to_adj_matrix(adj_list):
             adj_matrix[node][neighbor] = 1  # or any other value to represent the edge weight
 
     return adj_matrix
-
-matrix = adj_list_to_adj_matrix(data)
 def adjacency_matrix_to_edge_index(adjacency_matrix):
     """
     Convert adjacency matrix to edge index (COO format).
@@ -39,22 +32,36 @@ def adjacency_matrix_to_edge_index(adjacency_matrix):
     edge_index = torch.tensor([coo.row, coo.col], dtype=torch.long)
     return edge_index
 
+# sequences = []
+# with open('out_success/output_gpu_adjacency.pkl', 'rb') as f:
+#     graph_lst = []
+#     for i in tqdm(range(200)):
+#         data = pk.load(f)
+#         # sequences.append(data)
+#         matrix = adj_list_to_adj_matrix(data)
+#         # Convert adjacency matrix to edge index
+#         edge_index = adjacency_matrix_to_edge_index(matrix)
 
-# Convert adjacency matrix to edge index
-edge_index = adjacency_matrix_to_edge_index(data)
+#         # Assuming no additional node features, initialize node features with one-hot encoding
+#         num_nodes = len(data)
+#         x = torch.eye(num_nodes)
 
-# Assuming no additional node features, initialize node features with one-hot encoding
-num_nodes = len(data)
-x = torch.eye(num_nodes)
+#         # Create a PyTorch Geometric Data object
+#         graph_data = Data(x=x, edge_index=edge_index)
+#         # print(graph_data)
+#         graph_lst.append(graph_data)
 
-# Create a PyTorch Geometric Data object
-graph_data = Data(x=x, edge_index=edge_index)
-print(graph_data)
-
-in_channels = len(data)
-max_graph_size = len(data)
-scattering = Scatter(in_channels, max_graph_size)
-scatter_coeffs = scattering(graph_data)
-print(scatter_coeffs)
+# Save the graph data
+# torch.save(graph_lst, 'graph_data.pt')
+graph_data = torch.load('graph_data.pt')
+coeffs = []
+for graph in tqdm(graph_data[:20]):
+    # print(i)
+    in_channels = graph.x.size(0)
+    max_graph_size = graph.x.size(0)
+    scattering = Scatter(in_channels, max_graph_size)
+    scatter_coeffs = scattering(graph)
+    coeffs.append(scatter_coeffs)
+# import pdb; pdb.set_trace()
 # Save the scatter coefficients
-torch.save(scatter_coeffs, 'scatter_coeffs.pt')
+torch.save(coeffs, 'scatter_coeffs_200.pt')
