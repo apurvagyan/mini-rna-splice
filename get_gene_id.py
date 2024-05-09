@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 
 # Get a list of all the .fa files in the directory
-file_list = glob.glob('../mini_splicenn/240226_partial_sequences.fa')
+file_list = glob.glob('../mini_splicenn/mini-rna-splice/240507_partial_sequences_match_230531_events.fa')
 
 # Set to store unique strings
 unique_strings = set()
