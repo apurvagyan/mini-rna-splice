@@ -11,4 +11,4 @@
 *.json
 __pycache__/*
 .pyc
-
+.csv
