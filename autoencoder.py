@@ -40,16 +40,22 @@ def pad_coefficient_matrices(coefficients, max_num_nodes):
     return padded_coefficients
 
 if __name__ == '__main__':
-    print(torch.cuda.is_available())
-    exit()
-    model_name = 'model_under_200.pt'
 
-    scatter_coeffs = torch.load('scatter_coeffs_under_200.pt')
+    model_name = 'model_matched.pt'
+
+    scatter_coeffs = torch.load('scatter_coeffs_matched_psi.pt')
 
     max_num_nodes = max([item.shape[0] for item in scatter_coeffs])
-
-    padded_coefficients = pad_coefficient_matrices(scatter_coeffs[:10000], max_num_nodes)
     
+    print(max_num_nodes)
+
+    padded_coefficients = pad_coefficient_matrices(scatter_coeffs, max_num_nodes)
+    
+    with open ('padded_coefficients_matched_psi.pt', 'wb') as f:
+        torch.save(padded_coefficients, f)
+
+    exit()
+
     input_dim = max_num_nodes
     latent_dim = 64
 
@@ -102,7 +108,7 @@ if __name__ == '__main__':
 
     # Save the latent space representation
 
-    torch.save(latent_space, 'latent_space_under_200.pt')
+    torch.save(latent_space, 'latent_space_matched_psi.pt')
 
 
 
