@@ -41,14 +41,15 @@ def get_memory_usage():
 
 
 # graph_lst = []
-# with open('../data/out_success/output_gpu_adjacency.pkl', 'rb') as in_f:
+# with open('240507/outputs_240507_2_adjacency.pkl', 'rb') as in_f:
     
 #     # graph_lst = []
-#     for i in (pbar := tqdm(range(46925))):
+#     #Replace the 46925 with exact number of sequences in the file
+#     for i in (tqdm(range(2465))):
 #         data = pk.load(in_f)
 
-#         if len(data) > 200:
-#             continue
+#         # if len(data) > 200:
+#         #     continue
 
 #         # sequences.append(data)
 #         matrix = adj_list_to_adj_matrix(data)
@@ -64,25 +65,25 @@ def get_memory_usage():
 #         graph_data = Data(x=x, edge_index=edge_index)
 #         # print(graph_data)
 #         graph_lst.append(graph_data)
-#         # torch.save(graph_data, 'graph_data_under_200.pt')
+        # torch.save(graph_data, 'graph_data_under_200.pt')
 
-#         # Process the graph data to produce scattering coefficients
-#         # in_channels = graph_data.x.size(0)
-#         # max_graph_size = graph_data.x.size(0)
-#         # scattering = Scatter(in_channels, max_graph_size)
-#         # scatter_coeffs = scattering(graph_data)
+        # Process the graph data to produce scattering coefficients
+        # in_channels = graph_data.x.size(0)
+        # max_graph_size = graph_data.x.size(0)
+        # scattering = Scatter(in_channels, max_graph_size)
+        # scatter_coeffs = scattering(graph_data)
 
-#         # torch.save(scatter_coeffs, out_f)
+        # torch.save(scatter_coeffs, out_f)
     
 
-#         pbar.set_description(f"Memory usage: {get_memory_usage()} MB")
+        # pbar.set_description(f"Memory usage: {get_memory_usage()} MB")
 
 
 # Save the graph data
-# torch.save(graph_lst, 'graph_data_under_200.pt')
+# torch.save(graph_lst, 'graph_data.pt')
 
 
-graph_data = torch.load('graph_data_under_200.pt')
+# graph_data = torch.load('graph_data_under_200.pt')
 # print(len(graph_data))
 
 # # coeffs = []

@@ -44,20 +44,20 @@ def get_memory_usage():
 
 def write_data(results, lock, fnames):
     
-    graph_data, gene_id = results
+    graph_data = results
 
     lock.acquire()
 
-    with open(fnames[0], 'ab') as file:
+    with open(fnames, 'ab') as file:
         pk.dump(graph_data, file)
 
-    with open(fnames[1], 'a') as file:
-        file.write(gene_id + '\n')
+    # with open(fnames[1], 'a') as file:
+    #     file.write(gene_id + '\n')
 
     lock.release()
 
 
-def process_data(data, gene_id, out_fnames, write_lock):
+def process_data(data, out_fnames, write_lock):
 
     matrix = adj_list_to_adj_matrix(data)
     edge_index = adjacency_matrix_to_edge_index(matrix)
@@ -65,38 +65,44 @@ def process_data(data, gene_id, out_fnames, write_lock):
     x = torch.eye(num_nodes)
     graph_data = Data(x=x, edge_index=edge_index)
 
-    write_data((graph_data, gene_id), write_lock, out_fnames)
+    write_data(graph_data, write_lock, out_fnames)
     
 
 def main():
-    unique_gene_ids = set()
-    with open('unique_gene_ids.txt', 'r') as gene_ids_file:
-        for line in gene_ids_file:
-            gene_id = line.strip()
-            unique_gene_ids.add(gene_id)
+    # unique_gene_ids = set()
+    # with open('unique_gene_ids.txt', 'r') as gene_ids_file:
+    #     for line in gene_ids_file:
+    #         gene_id = line.strip()
+    #         unique_gene_ids.add(gene_id)
 
     manager = Manager()
     write_lock = manager.Lock()
 
-    in_fname = '../data/out_success/output_gpu_adjacency.pkl'
-    out_fnames = ['data/graph_data_matched.pt', 'data/gene_ids_matched.txt']
+    # in_fname = '../data/out_success/output_gpu_adjacency.pkl'
+    out_fnames = 'graph_data.pkl'
 
 
     with Pool(processes=cpu_count()) as pool:
-        with open('../data/out_success/gene_ids.txt', 'r') as gene_ids_file, open(in_fname, 'rb') as in_f:
-            for line in tqdm(gene_ids_file):
-                gene_id = line.strip()
-                data = pk.load(in_f)
+        # with open('../data/out_success/gene_ids.txt', 'r') as gene_ids_file, open(in_fname, 'rb') as in_f:
+        #     for line in tqdm(gene_ids_file):
+        #         gene_id = line.strip()
+        #         data = pk.load(in_f)
 
-                if gene_id in unique_gene_ids:
+        #         if gene_id in unique_gene_ids:
+        with open('240507/outputs_240507_2_adjacency.pkl', 'rb') as in_f:
+    
+            # graph_lst = []
+            #Replace the 46925 with exact number of sequences in the file
+            for i in (tqdm(range(2465))):
+                data = pk.load(in_f)
+                # import pdb; pdb.set_trace()
                     
-                    partial_process_data = partial(process_data, 
-                                data=data,
-                                gene_id=gene_id, 
+                partial_process_data = partial(process_data, 
+                                data=data, 
                                 out_fnames=out_fnames, 
                                 write_lock=write_lock)
 
-                    process_data(data, gene_id, out_fnames, write_lock)
+                process_data(data, out_fnames, write_lock)
 
                     # with tqdm(total=len(unique_gene_ids)) as pbar:
                     #     for _ in pool.imap_unordered(partial_process_data, unique_gene_ids):

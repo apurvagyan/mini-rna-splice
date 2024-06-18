@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=autoencoder
 #SBATCH --time=20:00:00
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=4
 #SBATCH --partition=gpu
 #SBATCH --gpus=1
 #SBATCH --mem=128G

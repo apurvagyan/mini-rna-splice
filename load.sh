@@ -10,6 +10,6 @@
 
 
 module load miniconda
-conda activate env_3_8
+conda activate mfcn
 
 python load_batch.py
